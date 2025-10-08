@@ -2,7 +2,7 @@
 "use client";
 
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { AiAgentDoctor } from "../../_components/AddNewSessionDialog";
 import Image from "next/image";
@@ -27,7 +27,7 @@ type messages={
 
 function VoiceAgent() {
   const { sessionId } = useParams();
-
+  const router = useRouter();
   const [sessionDetails, setSessionDetails] = useState<SessionDetails | null>(
     null
   );
@@ -42,6 +42,7 @@ function VoiceAgent() {
   const [liveTranscript, setLiveTranscript] = useState<string | null>(null);
   const [messages, setMessage] = useState<messages[]>([]);
   const [timer, setTimer] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     GetSessionDetails();
@@ -141,8 +142,10 @@ function VoiceAgent() {
     });
   };
 
-  const endCall = () => {
+  const endCall = async () => {
     if (!vapiInstance) return;
+
+    setLoading(true);
 
     console.log(vapiInstance);
     vapiInstance.stop();
@@ -153,7 +156,23 @@ function VoiceAgent() {
 
     setCallStarted(false);
     setVapiInstance(null);
+
+    const result = await generateReport();
+    router.replace('/dashboard');
+    setLoading(false);
   };
+
+  const generateReport = async () => {
+    const res = await axios.post("/api/report", {
+      messages,
+      sessionId,
+      sessionDetails
+    });
+
+    const data = res.data;
+    console.log("Generated Report:", data);
+    return data;
+  }
 
   return (
     <div className="container mx-auto py-24 flex">

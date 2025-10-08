@@ -6,10 +6,14 @@ import DoctorAgentList from './_components/DoctorAgentList'
 function Dashboard() {
   return (
     <>
-      <HistoryList />
+      <HistoryList
+        limit={5}
+        subtitle="Here are your five most recent consultations. Access the full history for everything else."
+        showMoreHref="/history"
+      />
       <DoctorAgentList />
     </>
-  )
+  );
 }
 
 export default Dashboard

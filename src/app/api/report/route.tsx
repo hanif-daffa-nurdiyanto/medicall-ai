@@ -78,9 +78,13 @@ export async function POST(req: NextRequest) {
     console.log("Generated report:", JSONRes);
 
     //Save to db
-    await db.update(SessionChatTable).set({
-      report: JSONRes,
-    }).where(eq(SessionChatTable.sessionId, sessionId)); // If id is integer, convert sessionId to number
+    await db
+      .update(SessionChatTable)
+      .set({
+        report: JSONRes,
+        conversation: messages ?? null,
+      })
+      .where(eq(SessionChatTable.sessionId, sessionId)); // If id is integer, convert sessionId to number
 
     // If SessionChatTable.id is actually a UUID (string), update your schema to use string type for id.
     return NextResponse.json(JSONRes);

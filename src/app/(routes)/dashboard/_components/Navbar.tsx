@@ -11,17 +11,12 @@ const menuOptions = [
   {
     id: 2,
     name: "History",
-    path: "/history",
+    path: "/dashboard/history",
   },
   {
     id: 3,
     name: "Pricing",
     path: "/pricing",
-  },
-  {
-    id: 4,
-    name: "Profile",
-    path: "/profile",
   },
 ];
 
