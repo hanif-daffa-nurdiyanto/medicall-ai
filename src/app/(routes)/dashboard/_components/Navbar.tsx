@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 const menuOptions = [
   {
@@ -48,10 +49,10 @@ function Navbar() {
               </svg>
             </label>
           </div>
-          <div className="mx-2 flex-1 px-2 flex items-center gap-6">
+          <Link href="/" className="mx-2 flex-1 px-2 flex items-center gap-6">
             <Image src="/logo.svg" alt="logo" width={40} height={40} />
             <h1>Medicall AI</h1>
-          </div>
+          </Link>
           <div className="hidden flex-none lg:block">
             <div className="flex items-center gap-6">
               <ul className="menu menu-horizontal">
