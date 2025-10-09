@@ -43,6 +43,7 @@ function VoiceAgent() {
   const [messages, setMessage] = useState<messages[]>([]);
   const [timer, setTimer] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
 
   useEffect(() => {
     GetSessionDetails();
@@ -156,8 +157,9 @@ function VoiceAgent() {
 
     setCallStarted(false);
     setVapiInstance(null);
-
+    setIsGeneratingReport(true);
     const result = await generateReport();
+    setIsGeneratingReport(false);
     router.replace('/dashboard');
     setLoading(false);
   };
@@ -175,8 +177,22 @@ function VoiceAgent() {
   }
 
   return (
-    <div className="container mx-auto py-24 flex">
-      <div className="mockup-phone border-primary h-[36rem] w-[18rem] cursor-pointer">
+    <>
+      {isGeneratingReport && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-300/80 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4 rounded-2xl bg-base-100 px-8 py-10 text-center shadow-2xl">
+            <span className="loading loading-spinner loading-lg text-primary" />
+            <div>
+              <h3 className="text-lg font-semibold">Generating Report</h3>
+              <p className="mt-1 text-sm text-base-content/70">
+                Please wait a moment while we prepare your consultation summary.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="container mx-auto py-24 flex">
+        <div className="mockup-phone border-primary h-[36rem] w-[18rem] cursor-pointer">
         <div className="mockup-phone-camera translate-y-2"></div>
         <div className="mockup-phone-display h-full w-full">
           <div className="w-full h-full bg-white dark:bg-slate-600 flex items-center justify-center flex-col gap-4">
@@ -221,28 +237,31 @@ function VoiceAgent() {
             )}
           </div>
         </div>
-      </div>
-      <div className="ml-4 px-16 flex-1">
-        <div>
-          <h2 className="text-lg font-medium">In Call</h2>
-          <div className="mt-2">
-            <p className="text-sm">
-              <strong>Notes:</strong> {sessionDetails?.notes}
-            </p>
+        </div>
+        <div className="ml-4 px-16 flex-1">
+          <div>
+            <h2 className="text-lg font-medium">In Call</h2>
+            <div className="mt-2">
+              <p className="text-sm">
+                <strong>Notes:</strong> {sessionDetails?.notes}
+              </p>
+            </div>
+          </div>
+          <div className="mt-32 text-center overflow-y-auto">
+            {messages?.slice(-4).map((message, index) => (
+              <p key={index} className="text-gray-400 p-2">
+                {message.role}: {message.text}
+              </p>
+            ))}
+            {liveTranscript && liveTranscript.length > 0 && (
+              <p className="text-gray-800 dark:text-gray-200">
+                {currentRole}: {liveTranscript}
+              </p>
+            )}
           </div>
         </div>
-        <div className="mt-32 text-center overflow-y-auto">
-          {messages?.slice(-4).map((message, index) => (
-            <p key={index} className="text-gray-400 p-2">
-              {message.role}: {message.text}
-            </p>
-          ))}
-          {liveTranscript && liveTranscript.length > 0 && (
-            <p className="text-gray-800 dark:text-gray-200">{currentRole}: {liveTranscript}</p>
-          )}
-        </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -139,12 +139,6 @@ const HistoryList = ({
                             >
                               View Report
                             </button>
-                            <Link
-                              href={`/dashboard/medical-agent/${item.sessionId}`}
-                              className="btn btn-ghost btn-sm"
-                            >
-                              Reopen Session
-                            </Link>
                           </div>
                         </td>
                       </tr>
