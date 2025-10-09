@@ -32,6 +32,10 @@ function AddNewSessionDialog({ noLabel = false }) {
       notes: note,
     });
     setSuggestedDoctors(result.data);
+    if (!result.data.length) {
+      setLoading(false);
+      return alert("Try adding more details!");
+    }
     setSelectedDoctor(result.data[0].id ? result.data[0] : null);
     setLoading(false);
   };
